@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := 1_GpioInputOutput
+BUILD_ARTIFACT_NAME := 2_UartTX_Pooling
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-1_GpioInputOutput.elf \
+2_UartTX_Pooling.elf \
 
 MAP_FILES += \
-1_GpioInputOutput.map \
+2_UartTX_Pooling.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-1_GpioInputOutput.list \
+2_UartTX_Pooling.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: 1_GpioInputOutput.elf secondary-outputs
+main-build: 2_UartTX_Pooling.elf secondary-outputs
 
 # Tool invocations
-1_GpioInputOutput.elf 1_GpioInputOutput.map: $(OBJS) $(USER_OBJS) /home/razvan/STM32CubeIDE/workspace_1.16.0/1_GpioInputOutput/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "1_GpioInputOutput.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/razvan/STM32CubeIDE/workspace_1.16.0/1_GpioInputOutput/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="1_GpioInputOutput.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+2_UartTX_Pooling.elf 2_UartTX_Pooling.map: $(OBJS) $(USER_OBJS) /home/razvan/STM32CubeIDE/workspace_1.16.0/2_UartTX_Pooling/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "2_UartTX_Pooling.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/razvan/STM32CubeIDE/workspace_1.16.0/2_UartTX_Pooling/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="2_UartTX_Pooling.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-1_GpioInputOutput.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "1_GpioInputOutput.list"
+2_UartTX_Pooling.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "2_UartTX_Pooling.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) 1_GpioInputOutput.elf 1_GpioInputOutput.list 1_GpioInputOutput.map default.size.stdout
+	-$(RM) 2_UartTX_Pooling.elf 2_UartTX_Pooling.list 2_UartTX_Pooling.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
