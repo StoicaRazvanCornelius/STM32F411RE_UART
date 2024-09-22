@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0000200c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000021f4  00000000  00000000  0000203c  2**0
+ 12 .debug_info   0000225c  00000000  00000000  0000203c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00000984  00000000  00000000  00004230  2**0
+ 13 .debug_abbrev 0000099e  00000000  00000000  00004298  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000002d8  00000000  00000000  00004bb8  2**3
+ 14 .debug_aranges 000002d8  00000000  00000000  00004c38  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 000001fa  00000000  00000000  00004e90  2**0
+ 15 .debug_rnglists 000001fa  00000000  00000000  00004f10  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00013c18  00000000  00000000  0000508a  2**0
+ 16 .debug_macro  00013c18  00000000  00000000  0000510a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00002d9b  00000000  00000000  00018ca2  2**0
+ 17 .debug_line   00002d9b  00000000  00000000  00018d22  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0007e3c0  00000000  00000000  0001ba3d  2**0
+ 18 .debug_str    0007e3dc  00000000  00000000  0001babd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00099dfd  2**0
+ 19 .comment      00000043  00000000  00000000  00099e99  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00000a14  00000000  00000000  00099e40  2**2
+ 20 .debug_frame  00000a14  00000000  00000000  00099edc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000065  00000000  00000000  0009a854  2**0
+ 21 .debug_line_str 00000065  00000000  00000000  0009a8f0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1144,23 +1144,23 @@ void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
 	...
 
 080007ec <main>:
-
-void pc13_btn_init(void);
-void pa5_led_init(void);
-uint8_t buttonStatus;
-
-int main(){
- 80007ec:	b580      	push	{r7, lr}
- 80007ee:	af00      	add	r7, sp, #0
-	HAL_Init();
- 80007f0:	f7ff fcf2 	bl	80001d8 <HAL_Init>
-	pc13_btn_init();
- 80007f4:	f000 f81a 	bl	800082c <pc13_btn_init>
-	pa5_led_init();
- 80007f8:	f000 f846 	bl	8000888 <pa5_led_init>
 	while(1)
 	{
-		buttonStatus =  HAL_GPIO_ReadPin (BTN_PORT, BTN_PIN);
+		HAL_UART_Transmit(&huart2, (uint8_t *) message, 20, 100);
+		HAL_Delay(10);
+	}
+}
+ 80007ec:	b580      	push	{r7, lr}
+ 80007ee:	af00      	add	r7, sp, #0
+
+ 80007f0:	f7ff fcf2 	bl	80001d8 <HAL_Init>
+void SysTick_Handler(void)
+ 80007f4:	f000 f81a 	bl	800082c <pc13_btn_init>
+{
+ 80007f8:	f000 f846 	bl	8000888 <pa5_led_init>
+	HAL_IncTick();
+}
+
  80007fc:	f44f 5100 	mov.w	r1, #8192	@ 0x2000
  8000800:	4807      	ldr	r0, [pc, #28]	@ (8000820 <main+0x34>)
  8000802:	f7ff ffc1 	bl	8000788 <HAL_GPIO_ReadPin>
@@ -1168,14 +1168,14 @@ int main(){
  8000808:	461a      	mov	r2, r3
  800080a:	4b06      	ldr	r3, [pc, #24]	@ (8000824 <main+0x38>)
  800080c:	701a      	strb	r2, [r3, #0]
-		HAL_GPIO_WritePin (LED_PORT, LED_PIN, buttonStatus);
+void uart_init(void)
  800080e:	4b05      	ldr	r3, [pc, #20]	@ (8000824 <main+0x38>)
  8000810:	781b      	ldrb	r3, [r3, #0]
  8000812:	461a      	mov	r2, r3
  8000814:	2120      	movs	r1, #32
  8000816:	4804      	ldr	r0, [pc, #16]	@ (8000828 <main+0x3c>)
  8000818:	f7ff ffce 	bl	80007b8 <HAL_GPIO_WritePin>
-		buttonStatus =  HAL_GPIO_ReadPin (BTN_PORT, BTN_PIN);
+
  800081c:	bf00      	nop
  800081e:	e7ed      	b.n	80007fc <main+0x10>
  8000820:	40020800 	.word	0x40020800
@@ -1183,16 +1183,16 @@ int main(){
  8000828:	40020000 	.word	0x40020000
 
 0800082c <pc13_btn_init>:
-	}
-}
+{
 
-void pc13_btn_init(void){
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
  800082c:	b580      	push	{r7, lr}
  800082e:	b086      	sub	sp, #24
  8000830:	af00      	add	r7, sp, #0
-	//2.Configure PC13 as input pin
-	//Enable
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	//enable UART pins clock access
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+
  8000832:	2300      	movs	r3, #0
  8000834:	603b      	str	r3, [r7, #0]
  8000836:	4b12      	ldr	r3, [pc, #72]	@ (8000880 <pc13_btn_init+0x54>)
@@ -1205,8 +1205,8 @@ void pc13_btn_init(void){
  8000846:	f003 0304 	and.w	r3, r3, #4
  800084a:	603b      	str	r3, [r7, #0]
  800084c:	683b      	ldr	r3, [r7, #0]
-
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	//enable UART module clock access
+	__HAL_RCC_USART2_CLK_ENABLE();
  800084e:	1d3b      	adds	r3, r7, #4
  8000850:	2200      	movs	r2, #0
  8000852:	601a      	str	r2, [r3, #0]
@@ -1215,26 +1215,26 @@ void pc13_btn_init(void){
  8000858:	60da      	str	r2, [r3, #12]
  800085a:	611a      	str	r2, [r3, #16]
 
-	GPIO_InitStruct.Pin   = BTN_PIN;
+	//Configure pins to act as alternate functions pins(UART)
  800085c:	f44f 5300 	mov.w	r3, #8192	@ 0x2000
  8000860:	607b      	str	r3, [r7, #4]
-	GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pin       = GPIO_PIN_2|GPIO_PIN_3;
  8000862:	2300      	movs	r3, #0
  8000864:	60bb      	str	r3, [r7, #8]
-	GPIO_InitStruct.Pull  = GPIO_NOPULL;
+	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
  8000866:	2300      	movs	r3, #0
  8000868:	60fb      	str	r3, [r7, #12]
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
  800086a:	2300      	movs	r3, #0
  800086c:	613b      	str	r3, [r7, #16]
-
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	GPIO_InitStruct.Pull 	  = GPIO_NOPULL;
+	GPIO_InitStruct.Speed 	  = GPIO_SPEED_FREQ_VERY_HIGH;
  800086e:	1d3b      	adds	r3, r7, #4
  8000870:	4619      	mov	r1, r3
  8000872:	4804      	ldr	r0, [pc, #16]	@ (8000884 <pc13_btn_init+0x58>)
  8000874:	f7ff fe04 	bl	8000480 <HAL_GPIO_Init>
 
-}
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  8000878:	bf00      	nop
  800087a:	3718      	adds	r7, #24
  800087c:	46bd      	mov	sp, r7
@@ -1243,13 +1243,13 @@ void pc13_btn_init(void){
  8000884:	40020800 	.word	0x40020800
 
 08000888 <pa5_led_init>:
-void pa5_led_init(void){
+
  8000888:	b580      	push	{r7, lr}
  800088a:	b086      	sub	sp, #24
  800088c:	af00      	add	r7, sp, #0
-	//1. Configure PA5 as output pin
-	//Enable clock
-	__HAL_RCC_GPIOA_CLK_ENABLE();
+	//Configure UART module
+	huart2.Instance = USART2;
+	huart2.Init.BaudRate = 115200;
  800088e:	2300      	movs	r3, #0
  8000890:	603b      	str	r3, [r7, #0]
  8000892:	4b12      	ldr	r3, [pc, #72]	@ (80008dc <pa5_led_init+0x54>)
@@ -1262,8 +1262,8 @@ void pa5_led_init(void){
  80008a2:	f003 0301 	and.w	r3, r3, #1
  80008a6:	603b      	str	r3, [r7, #0]
  80008a8:	683b      	ldr	r3, [r7, #0]
-
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	huart2.Init.WordLength = UART_WORDLENGTH_8B;
+	huart2.Init.StopBits = UART_STOPBITS_1;
  80008aa:	1d3b      	adds	r3, r7, #4
  80008ac:	2200      	movs	r2, #0
  80008ae:	601a      	str	r2, [r3, #0]
@@ -1271,21 +1271,21 @@ void pa5_led_init(void){
  80008b2:	609a      	str	r2, [r3, #8]
  80008b4:	60da      	str	r2, [r3, #12]
  80008b6:	611a      	str	r2, [r3, #16]
-
-	GPIO_InitStruct.Pin   = LED_PIN;
+	huart2.Init.Mode = UART_MODE_TX;
+	huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
  80008b8:	2320      	movs	r3, #32
  80008ba:	607b      	str	r3, [r7, #4]
-	GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+	huart2.Init.OverSampling = UART_OVERSAMPLING_16;
  80008bc:	2301      	movs	r3, #1
  80008be:	60bb      	str	r3, [r7, #8]
-	GPIO_InitStruct.Pull  = GPIO_NOPULL;
+
  80008c0:	2300      	movs	r3, #0
  80008c2:	60fb      	str	r3, [r7, #12]
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_UART_Init(&huart2);
  80008c4:	2300      	movs	r3, #0
  80008c6:	613b      	str	r3, [r7, #16]
 
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
  80008c8:	1d3b      	adds	r3, r7, #4
  80008ca:	4619      	mov	r1, r3
  80008cc:	4804      	ldr	r0, [pc, #16]	@ (80008e0 <pa5_led_init+0x58>)
@@ -1300,12 +1300,9 @@ void pa5_led_init(void){
  80008e0:	40020000 	.word	0x40020000
 
 080008e4 <SysTick_Handler>:
-void SysTick_Handler(void){
  80008e4:	b580      	push	{r7, lr}
  80008e6:	af00      	add	r7, sp, #0
-	HAL_IncTick();
  80008e8:	f7ff fcd0 	bl	800028c <HAL_IncTick>
-}
  80008ec:	bf00      	nop
  80008ee:	bd80      	pop	{r7, pc}
 

@@ -2,14 +2,15 @@
 
 UART_HandleTypeDef huart2;
 void uart_init(void);
-
+char message[20]="Hello from STM32\r\n";
 int main()
 {
 	HAL_Init();
 	uart_init();
 	while(1)
 	{
-		//HAL_UART_Transmit ()
+		HAL_UART_Transmit(&huart2, (uint8_t *) message, 20, 100);
+		HAL_Delay(10);
 	}
 }
 
@@ -47,7 +48,7 @@ void uart_init(void)
 	huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 	huart2.Init.OverSampling = UART_OVERSAMPLING_16;
 
-	HAL_UART_Init(&huart2 );
+	HAL_UART_Init(&huart2);
 
 
 }
