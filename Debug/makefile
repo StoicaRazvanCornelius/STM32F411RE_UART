@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := 1_GpioInputOutput
+BUILD_ARTIFACT_NAME := 2_UART
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-1_GpioInputOutput.elf \
+2_UART.elf \
 
 MAP_FILES += \
-1_GpioInputOutput.map \
+2_UART.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-1_GpioInputOutput.list \
+2_UART.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: 1_GpioInputOutput.elf secondary-outputs
+main-build: 2_UART.elf secondary-outputs
 
 # Tool invocations
-1_GpioInputOutput.elf 1_GpioInputOutput.map: $(OBJS) $(USER_OBJS) C:\Users\razvan\Desktop\stm32\repositories\STM32F411RE_GPIO\STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "1_GpioInputOutput.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\razvan\Desktop\stm32\repositories\STM32F411RE_GPIO\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="1_GpioInputOutput.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+2_UART.elf 2_UART.map: $(OBJS) $(USER_OBJS) C:\Users\razvan\Desktop\stm32\repositories\2_UART\STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "2_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\razvan\Desktop\stm32\repositories\2_UART\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="2_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-1_GpioInputOutput.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "1_GpioInputOutput.list"
+2_UART.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "2_UART.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) 1_GpioInputOutput.elf 1_GpioInputOutput.list 1_GpioInputOutput.map default.size.stdout
+	-$(RM) 2_UART.elf 2_UART.list 2_UART.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
